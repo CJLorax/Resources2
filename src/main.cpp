@@ -72,19 +72,15 @@ int main(int argc, char ** argv) {
 
 	string s_cwd_images = s_cwd + "/Resources2/images/";
 
-	cout << s_cwd_images << endl;
-
 #endif
 
 #if defined (__linux__)
 
 	cout << "This is Linux" << endl;
 
-	cout << "Working on Mac, no trying Linux" << endl;
-
 	string s_cwd(getcwd(NULL, 0));
 
-	string s_cwd_images = s_cwd + "/images/";
+	string s_cwd_images = s_cwd + "/Resources2/images/";
 
 
 #endif
@@ -114,15 +110,16 @@ int main(int argc, char ** argv) {
 
 	//create texture
 
-	string tempStr = s_cwd_images + "player.png";
+	//string tempStr = s_cwd_images + "player.png";//tempStr.c_str()
 
-	SDL_Surface *surface = IMG_Load(tempStr.c_str());
+	SDL_Surface *surface = IMG_Load((s_cwd_images + "player.png").c_str());
 
-    if( surface == NULL )
+    /*
+	if( surface == NULL )
     {
         printf( "Unable to load image %s! SDL_image Error: %s\n", tempStr.c_str(), IMG_GetError() );
     }
-
+     */
 
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
 
