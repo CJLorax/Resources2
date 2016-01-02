@@ -43,7 +43,9 @@ public:
 
 	Player(SDL_Renderer *renderer, std::string filePath, float x, float y);
 
-	void Update(float delta);
+	void Input(SDL_Event e);
+
+	void Update(); //float delta
 
 	void Draw(SDL_Renderer *renderer);
 

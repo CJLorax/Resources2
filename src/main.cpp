@@ -51,6 +51,11 @@ using namespace std;
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 768;
 
+
+
+//Game Controller 1 handler
+SDL_Joystick* gGameController = NULL;
+
 int main(int argc, char ** argv) {
 
 	//File paths for Windows, Mac, and Linux
@@ -106,25 +111,10 @@ int main(int argc, char ** argv) {
 	//Create Renderer
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-/*
-	//create texture
+	//Load joystick
+	gGameController = SDL_JoystickOpen(0);
 
-	SDL_Surface *surface = IMG_Load((s_cwd_images + "player.png").c_str());
-
-	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-	SDL_FreeSurface(surface);
-
-	SDL_Rect posRect;
-
-	posRect.x = 10;
-
-	posRect.y = 10;
-
-	posRect.w = 81;
-
-	posRect.h = 103;
-	*/
+	// create player
 	Player player1 = Player(renderer, s_cwd_images + "player.png", 300.0f, 300.0f);
 
 
@@ -135,6 +125,21 @@ int main(int argc, char ** argv) {
 				break;
 			}
 		}
+		else if (e.type == SDL_JOYAXISMOTION)
+		{
+
+			//Motion on controller 0
+			if (e.jaxis.which == 0)
+			{
+				player1.Input(e);
+			}
+
+		}
+
+
+
+		player1.Update();
+
 
 		SDL_RenderClear(renderer);
 
@@ -147,6 +152,10 @@ int main(int argc, char ** argv) {
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
+
+	//Close game controller
+	SDL_JoystickClose(gGameController);
+	gGameController = NULL;
 
 	SDL_Quit();
 
