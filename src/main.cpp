@@ -43,6 +43,8 @@
 #include <string>
 #include <iostream>
 
+#include "player.h"
+
 using namespace std;
 
 //Screen dimension constants
@@ -59,16 +61,12 @@ int main(int argc, char ** argv) {
 
 	string s_cwd(getcwd(NULL, 0));
 
-	string s_cwd_images = s_cwd + "\\Resources\\images\\";
+	string s_cwd_images = s_cwd + "\\Resources2\\images\\";
 
 
 #endif
 
 #if defined (__APPLE__)
-
-	cout << "This is Apple" << endl;
-
-	cout << "This is Apple" << endl;
 
 	cout << "This is Apple" << endl;
 
@@ -79,10 +77,6 @@ int main(int argc, char ** argv) {
 #endif
 
 #if defined (__linux__)
-
-	cout << "This is Linux" << endl;
-
-	cout << "This is Linux" << endl;
 
 	cout << "This is Linux" << endl;
 
@@ -99,9 +93,6 @@ int main(int argc, char ** argv) {
 	//The renderer we'll be using
 	SDL_Renderer *renderer = NULL;
 
-	//The surface contained by the window
-	//SDL_Surface* screenSurface = NULL;
-
 	//Initialize all the SDL includes - SDL, images, mixer, ttf, net
 	SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -115,19 +106,10 @@ int main(int argc, char ** argv) {
 	//Create Renderer
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-
+/*
 	//create texture
 
-	//string tempStr = s_cwd_images + "player.png";//tempStr.c_str()
-
 	SDL_Surface *surface = IMG_Load((s_cwd_images + "player.png").c_str());
-
-    /*
-	if( surface == NULL )
-    {
-        printf( "Unable to load image %s! SDL_image Error: %s\n", tempStr.c_str(), IMG_GetError() );
-    }
-     */
 
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
 
@@ -142,6 +124,8 @@ int main(int argc, char ** argv) {
 	posRect.w = 81;
 
 	posRect.h = 103;
+	*/
+	Player player1 = Player(renderer, s_cwd_images + "player.png", 300.0f, 300.0f);
 
 
 	while (1) {
@@ -154,7 +138,9 @@ int main(int argc, char ** argv) {
 
 		SDL_RenderClear(renderer);
 
-		SDL_RenderCopy(renderer, texture, NULL, &posRect);
+		//SDL_RenderCopy(renderer, texture, NULL, &posRect);
+
+		player1.Draw(renderer);
 
 		SDL_RenderPresent(renderer);
 	}
