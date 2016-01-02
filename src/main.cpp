@@ -70,6 +70,8 @@ int main(int argc, char ** argv) {
 
 	cout << "This is Apple" << endl;
 
+	cout << "This is Apple" << endl;
+
 	string s_cwd(getcwd(NULL, 0));
 
 	string s_cwd_images = s_cwd + "/Resources2/images/";
