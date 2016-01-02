@@ -100,7 +100,7 @@ int main(int argc, char ** argv) {
 	SDL_Renderer *renderer = NULL;
 
 	//The surface contained by the window
-	SDL_Surface* screenSurface = NULL;
+	//SDL_Surface* screenSurface = NULL;
 
 	//Initialize all the SDL includes - SDL, images, mixer, ttf, net
 	SDL_Init(SDL_INIT_EVERYTHING);
