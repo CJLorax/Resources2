@@ -30,6 +30,15 @@
 
 #endif
 
+#if defined (_WIN32) ||  (_WIN64)
+#include <direct.h>
+#define getcwd _getcwd
+#endif
+
+#if defined (__linux__)
+#include <unistd.h>
+#endif
+
 #include <stdio.h>
 #include <string>
 #include <iostream>
@@ -43,9 +52,14 @@ const int SCREEN_HEIGHT = 768;
 int main(int argc, char ** argv) {
 
 	//File paths for Windows, Mac, and Linux
+	//File paths for Windows, Mac, and Linux
 #if defined (_WIN32) ||  (_WIN64)
 
 	cout << "This is Windows" << endl;
+
+	string s_cwd(getcwd(NULL, 0));
+
+	string s_cwd_images = s_cwd + "\\Resources\\images\\";
 
 
 #endif
@@ -54,12 +68,23 @@ int main(int argc, char ** argv) {
 
 	cout << "This is Apple" << endl;
 
+	string s_cwd(getcwd(NULL, 0));
+
+	string s_cwd_images = s_cwd + "/Resources2/images/";
+
+	cout << s_cwd_images << endl;
 
 #endif
 
 #if defined (__linux__)
 
 	cout << "This is Linux" << endl;
+
+	cout << "Working on Mac, no trying Linux" << endl;
+
+	string s_cwd(getcwd(NULL, 0));
+
+	string s_cwd_images = s_cwd + "/images/";
 
 
 #endif
@@ -87,6 +112,33 @@ int main(int argc, char ** argv) {
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 
+	//create texture
+
+	string tempStr = s_cwd_images + "player.png";
+
+	SDL_Surface *surface = IMG_Load(tempStr.c_str());
+
+    if( surface == NULL )
+    {
+        printf( "Unable to load image %s! SDL_image Error: %s\n", tempStr.c_str(), IMG_GetError() );
+    }
+
+
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+	SDL_FreeSurface(surface);
+
+	SDL_Rect posRect;
+
+	posRect.x = 10;
+
+	posRect.y = 10;
+
+	posRect.w = 81;
+
+	posRect.h = 103;
+
+
 	while (1) {
 		SDL_Event e;
 		if (SDL_PollEvent(&e)) {
@@ -96,6 +148,8 @@ int main(int argc, char ** argv) {
 		}
 
 		SDL_RenderClear(renderer);
+
+		SDL_RenderCopy(renderer, texture, NULL, &posRect);
 
 		SDL_RenderPresent(renderer);
 	}
