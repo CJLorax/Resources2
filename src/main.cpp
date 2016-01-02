@@ -56,6 +56,14 @@ const int SCREEN_HEIGHT = 768;
 //Game Controller 1 handler
 SDL_Joystick* gGameController = NULL;
 
+
+// Timing variables
+Uint32 old_time;
+float ftime;
+
+// Need to initialize this here for event loop to work
+Uint32 current_time = SDL_GetTicks();
+
 int main(int argc, char ** argv) {
 
 	//File paths for Windows, Mac, and Linux
@@ -118,7 +126,22 @@ int main(int argc, char ** argv) {
 	Player player1 = Player(renderer, s_cwd_images + "player.png", 300.0f, 300.0f);
 
 
+
+
 	while (1) {
+
+		// Update the timing information
+		old_time = current_time;
+		current_time = SDL_GetTicks();
+		ftime = float((current_time - old_time) / 1000.0f) * 60;
+
+		/*
+		oldTimeMS = timeMS;
+		timeMS = SDL_GetTicks();
+		frameTimeMS = timeMS - oldTimeMS;
+		frameTime = (float)timeMS / 1000.0f;
+		*/
+
 		SDL_Event e;
 		if (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
@@ -138,7 +161,7 @@ int main(int argc, char ** argv) {
 
 
 
-		player1.Update();
+		player1.Update(ftime);
 
 
 		SDL_RenderClear(renderer);
@@ -148,6 +171,7 @@ int main(int argc, char ** argv) {
 		player1.Draw(renderer);
 
 		SDL_RenderPresent(renderer);
+
 	}
 
 	SDL_DestroyRenderer(renderer);

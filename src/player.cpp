@@ -4,12 +4,12 @@
 
 using namespace std;
 
-
-
-
-
 //Analog joystick dead zone
-const int JOYSTICK_DEAD_ZONE = 500;
+const int JOYSTICK_DEAD_ZONE = 8000;
+
+int xDir, yDir;
+
+float speed = 10.0f;
 
 
 Player::Player(SDL_Renderer *renderer, std::string filePath, float x, float y)
@@ -29,8 +29,6 @@ Player::Player(SDL_Renderer *renderer, std::string filePath, float x, float y)
 
 	posRect.h = 103;
 
-
-
 }
 
 void Player::Input(SDL_Event e)
@@ -41,19 +39,19 @@ void Player::Input(SDL_Event e)
 		//Left of dead zone
 		if (e.jaxis.value < -JOYSTICK_DEAD_ZONE)
 		{
-			//xDir = -1;
-			cout << "X = -1" << endl;
+			xDir = -1;
+			//cout << "X = -1" << endl;
 		}
 		//Right of dead zone
 		else if (e.jaxis.value > JOYSTICK_DEAD_ZONE)
 		{
-			//xDir = 1;
-			cout << "X = 1" << endl;
+			xDir = 1;
+			//cout << "X = 1" << endl;
 		}
 		else
 		{
-			//xDir = 0;
-			cout << "X = 0" << endl;
+			xDir = 0;
+			//cout << "X = 0" << endl;
 		}
 	}
 
@@ -63,27 +61,29 @@ void Player::Input(SDL_Event e)
 		//Below of dead zone
 		if (e.jaxis.value < -JOYSTICK_DEAD_ZONE)
 		{
-			//yDir = -1;
-			cout << "Y = -1" << endl;
+			yDir = -1;
+			//cout << "Y = -1" << endl;
 		}
 		//Above of dead zone
 		else if (e.jaxis.value > JOYSTICK_DEAD_ZONE)
 		{
-			//yDir = 1;
-			cout << "Y = 1" << endl;
+			yDir = 1;
+			//cout << "Y = 1" << endl;
 		}
 		else
 		{
-			//yDir = 0;
-			cout << "Y = 0" << endl;
+			yDir = 0;
+			//cout << "Y = 0" << endl;
 		}
 	}
 
 }
 
-void Player::Update() //float delta
+void Player::Update(float ftime) //float delta
 {
-
+	posRect.x += ((speed * xDir) * ftime) + 0.5f;
+	
+	posRect.y += ((speed * yDir) * ftime) + 0.5f;
 
 }
 
@@ -96,7 +96,6 @@ void Player::Draw(SDL_Renderer *renderer)
 Player::~Player()
 {
 	SDL_DestroyTexture(texture);
-
 
 }
 

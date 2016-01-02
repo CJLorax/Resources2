@@ -45,13 +45,12 @@ public:
 
 	void Input(SDL_Event e);
 
-	void Update(); //float delta
+	void Update(float ftime); //
 
 	void Draw(SDL_Renderer *renderer);
 
 	~Player();
 
-private:
 
 
 };
