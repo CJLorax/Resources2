@@ -68,9 +68,7 @@ int main(int argc, char ** argv) {
 
 	cout << "This is Apple" << endl;
 
-	cout << "Maybe" << endl;
-
-	cout << "Maybe" << endl;
+	cout << "This is Apple" << endl;
 
 	string s_cwd(getcwd(NULL, 0));
 
