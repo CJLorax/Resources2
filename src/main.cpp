@@ -53,16 +53,15 @@ const int SCREEN_HEIGHT = 768;
 
 
 
-//Game Controller 1 handler
-SDL_Joystick* gGameController = NULL;
+SDL_GameController* gGameController = NULL;
+
+float deltaTime = 0.0;
+int thisTime = 0;
+int lastTime = 0;
 
 
-// Timing variables
-Uint32 old_time;
-float ftime;
 
-// Need to initialize this here for event loop to work
-Uint32 current_time = SDL_GetTicks();
+
 
 int main(int argc, char ** argv) {
 
@@ -119,54 +118,67 @@ int main(int argc, char ** argv) {
 	//Create Renderer
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-	//Load joystick
-	gGameController = SDL_JoystickOpen(0);
+
+	// Open Game Controller
+	gGameController = SDL_GameControllerOpen(0);
+
+	// Turn on Game Controller Events
+	SDL_GameControllerEventState(SDL_ENABLE);
+
 
 	// create player
-	Player player1 = Player(renderer, s_cwd_images + "player.png", 300.0f, 300.0f);
+	Player player1 = Player(renderer, s_cwd_images + "player.png", 300.6f, 300.4f);
 
 
 
 
 	while (1) {
 
-		// Update the timing information
-		old_time = current_time;
-		current_time = SDL_GetTicks();
-		ftime = float((current_time - old_time) / 1000.0f) * 60;
+		thisTime = SDL_GetTicks();
+		deltaTime = (float)(thisTime - lastTime) / 1000;
+		lastTime = thisTime;
 
-		/*
-		oldTimeMS = timeMS;
-		timeMS = SDL_GetTicks();
-		frameTimeMS = timeMS - oldTimeMS;
-		frameTime = (float)timeMS / 1000.0f;
-		*/
 
 		SDL_Event e;
 		if (SDL_PollEvent(&e)) {
 			if (e.type == SDL_QUIT) {
 				break;
 			}
-		}
-		else if (e.type == SDL_JOYAXISMOTION)
-		{
+			//}
 
-			//Motion on controller 0
-			if (e.jaxis.which == 0)
-			{
-				player1.Input(e);
+				// game pad events
+			switch (e.type) {
+
+			case SDL_CONTROLLERDEVICEADDED:
+				//AddController( event.cdevice );
+				break;
+
+			case SDL_CONTROLLERDEVICEREMOVED:
+				// RemoveController( event.cdevice );
+				break;
+
+			case SDL_CONTROLLERBUTTONDOWN:
+				//case SDL_CONTROLLERBUTTONUP:
+				//std::cout << "Joystick Button" << std::endl;
+				//player.OnControllerButton(renderTarget, ev.cbutton);
+				break;
+
+			case SDL_CONTROLLERAXISMOTION:
+				//std::cout << "Joystick movement" << std::endl;
+				player1.OnControllerAxis(e.caxis);
+
+				break;
+
+				// YOUR OTHER EVENT HANDLING HERE
 			}
-
 		}
 
 
 
-		player1.Update(ftime);
+		player1.Update(deltaTime);
 
 
 		SDL_RenderClear(renderer);
-
-		//SDL_RenderCopy(renderer, texture, NULL, &posRect);
 
 		player1.Draw(renderer);
 
@@ -178,7 +190,7 @@ int main(int argc, char ** argv) {
 	SDL_DestroyWindow(window);
 
 	//Close game controller
-	SDL_JoystickClose(gGameController);
+	SDL_GameControllerClose(gGameController);
 	gGameController = NULL;
 
 	SDL_Quit();

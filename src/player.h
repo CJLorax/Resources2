@@ -43,7 +43,7 @@ public:
 
 	Player(SDL_Renderer *renderer, std::string filePath, float x, float y);
 
-	void Input(SDL_Event e);
+	void OnControllerAxis(const SDL_ControllerAxisEvent event);
 
 	void Update(float ftime); //
 

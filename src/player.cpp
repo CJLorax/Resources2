@@ -7,9 +7,11 @@ using namespace std;
 //Analog joystick dead zone
 const int JOYSTICK_DEAD_ZONE = 8000;
 
-int xDir, yDir;
+float xDir, yDir;
 
-float speed = 10.0f;
+float speed = 500.0f;
+
+float pos_X, pos_Y;
 
 
 Player::Player(SDL_Renderer *renderer, std::string filePath, float x, float y)
@@ -29,61 +31,65 @@ Player::Player(SDL_Renderer *renderer, std::string filePath, float x, float y)
 
 	posRect.h = 103;
 
+	pos_X = x;
+
+	pos_Y = y;
+
+
 }
 
-void Player::Input(SDL_Event e)
+void Player::OnControllerAxis(const SDL_ControllerAxisEvent event)
 {
-	//X axis motion
-	if (e.jaxis.axis == 0)
-	{
-		//Left of dead zone
-		if (e.jaxis.value < -JOYSTICK_DEAD_ZONE)
-		{
-			xDir = -1;
-			//cout << "X = -1" << endl;
-		}
-		//Right of dead zone
-		else if (e.jaxis.value > JOYSTICK_DEAD_ZONE)
-		{
-			xDir = 1;
-			//cout << "X = 1" << endl;
-		}
-		else
-		{
-			xDir = 0;
-			//cout << "X = 0" << endl;
-		}
-	}
+	// Axis movements and button presses both sent here as SDL_ControllerAxisEvent structures
 
-	//Y axis motion
-	if (e.jaxis.axis == 1)
+	if (event.which == 0)
 	{
-		//Below of dead zone
-		if (e.jaxis.value < -JOYSTICK_DEAD_ZONE)
+		if (event.axis == 0)
 		{
-			yDir = -1;
-			//cout << "Y = -1" << endl;
+
+			if (event.value < -JOYSTICK_DEAD_ZONE)
+			{
+				xDir = -1.0f;
+			}
+			else if (event.value > JOYSTICK_DEAD_ZONE)
+			{
+				xDir = 1.0f;
+			}
+			else
+			{
+				xDir = 0.0f;
+			}
 		}
-		//Above of dead zone
-		else if (e.jaxis.value > JOYSTICK_DEAD_ZONE)
+
+		if (event.axis == 1)
 		{
-			yDir = 1;
-			//cout << "Y = 1" << endl;
+
+			if (event.value < -JOYSTICK_DEAD_ZONE)
+			{
+				yDir = -1.0f;
+			}
+			else if (event.value > JOYSTICK_DEAD_ZONE)
+			{
+				yDir = 1.0f;
+			}
+			else
+			{
+				yDir = 0.0f;
+			}
 		}
-		else
-		{
-			yDir = 0;
-			//cout << "Y = 0" << endl;
-		}
+
 	}
 
 }
 
 void Player::Update(float ftime) //float delta
 {
-	posRect.x += ((speed * xDir) * ftime) + 0.5f;
+	pos_X += (speed * xDir) * ftime;
+	pos_Y += (speed * yDir) * ftime;
 	
-	posRect.y += ((speed * yDir) * ftime) + 0.5f;
+	posRect.x = (int)(pos_X + 0.5f);
+	
+	posRect.y = (int)(pos_Y + 0.5f);
 
 }
 
